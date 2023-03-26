@@ -53,7 +53,7 @@ def main():
         win_state = game.check_win()
         if(win_state > 0):
             check_win_or_draw(win_state)
-            if(input("press q to quit or any key to reset boad").lower != "q"):
+            if(input("press q to quit or any key to reset boad").lower() != "q"):
                 game.reset_board()
             else: 
                 run = False

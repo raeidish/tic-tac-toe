@@ -28,14 +28,15 @@ class TicTacToe:
         return self.state
     
     def check_win(self):
-        if(self.move_count == (math.pow(3,2)-1)):
-            return 3
         
         for mask in self.WIN_MASKS:
             if(sum([self.state[i] == "X" if x == 1 else False for i,x in enumerate(mask)]) == 3):
                 return 1
             if(sum([self.state[i] == "Y" if x == 1 else False for i,x in enumerate(mask)]) == 3):
                 return 2
+
+        if(self.move_count == (math.pow(3,2))):
+            return 3
 
         return 0
 
