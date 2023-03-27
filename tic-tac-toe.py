@@ -1,5 +1,6 @@
 from game import TicTacToe
-from time import sleep
+from game import check_win
+from minimax import minimax
 import os
 
 CLEAR_SCREEN = "\x1B[2J"
@@ -14,19 +15,20 @@ def print_board(state):
 
 def do_move(game):
     if (game.get_move_count() % 2) == 0:
-        prompt = "X turn choose position [1-9]"
+        (index,_) = minimax(game.state,game.move_count,"X",20,True)
         symbol = "X"
     else:
         prompt = "Y turn choose position [1-9]"
         symbol = "Y"
+        index = input(prompt)
+        index = int(index)-1
 
-    index = input(prompt)
-    index = int(index)-1
     if(index >= 0 and index <= 8):
         valid_move = game.make_move(index, symbol)
         if(valid_move):
             return
 
+    print(index)
     print("Invalid move try again")
     do_move(game)
 
@@ -50,7 +52,7 @@ def main():
 
         print_board(game.get_state())
 
-        win_state = game.check_win()
+        win_state = check_win(game.state,game.move_count)
         if(win_state > 0):
             check_win_or_draw(win_state)
             if(input("press q to quit or any key to reset boad").lower() != "q"):

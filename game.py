@@ -1,20 +1,30 @@
 import math
 import copy
+WIN_MASKS = [
+    #horizontal wins
+    [1,1,1,0,0,0,0,0,0],
+    [0,0,0,1,1,1,0,0,0],
+    [0,0,0,0,0,0,1,1,1],
+    #vertical wins
+    [1,0,0,1,0,0,1,0,0],
+    [0,1,0,0,1,0,0,1,0],
+    [0,0,1,0,0,1,0,0,1],
+    #diagonal wins
+    [1,0,0,0,1,0,0,0,1],
+    [0,0,1,0,1,0,1,0,0]
+]
+def check_win(state,move_count):
+    for mask in WIN_MASKS:
+        if(sum([state[i] == "X" if x == 1 else False for i,x in enumerate(mask)]) == 3):
+            return 1
+        if(sum([state[i] == "Y" if x == 1 else False for i,x in enumerate(mask)]) == 3):
+            return 2
+
+    if(move_count == (math.pow(3,2))):
+        return 3
+    return 0
 
 class TicTacToe:
-    WIN_MASKS = [
-        #horizontal wins
-        [1,1,1,0,0,0,0,0,0],
-        [0,0,0,1,1,1,0,0,0],
-        [0,0,0,0,0,0,1,1,1],
-        #vertical wins
-        [1,0,0,1,0,0,1,0,0],
-        [0,1,0,0,1,0,0,1,0],
-        [0,0,1,0,0,1,0,0,1],
-        #diagonal wins
-        [1,0,0,0,1,0,0,0,1],
-        [0,0,1,0,1,0,1,0,0]
-    ]
 
     def __init__(self):
         self.initial_state = ["." for _ in range(0,9)]
@@ -27,18 +37,6 @@ class TicTacToe:
     def get_state(self):
         return self.state
     
-    def check_win(self):
-        
-        for mask in self.WIN_MASKS:
-            if(sum([self.state[i] == "X" if x == 1 else False for i,x in enumerate(mask)]) == 3):
-                return 1
-            if(sum([self.state[i] == "Y" if x == 1 else False for i,x in enumerate(mask)]) == 3):
-                return 2
-
-        if(self.move_count == (math.pow(3,2))):
-            return 3
-
-        return 0
 
     def make_move(self,index,symbol):
         #if valid move add in symbol step move_count and return True
