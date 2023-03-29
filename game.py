@@ -24,19 +24,19 @@ def check_win(state,move_count):
         return 3
     return 0
 
-class TicTacToe:
+def get_available_moves(state):
+    #construct all next_possible moves for this iteration
+    available_moves = []
+    for (i,s) in enumerate(state):
+        if s != "X" and s != "Y":
+            available_moves.append(i)
+    return available_moves
 
+class TicTacToe:
     def __init__(self):
         self.initial_state = ["." for _ in range(0,9)]
         self.state = copy.deepcopy(self.initial_state)
         self.move_count = 0
-        
-    def get_move_count(self):
-        return self.move_count
-
-    def get_state(self):
-        return self.state
-    
 
     def make_move(self,index,symbol):
         #if valid move add in symbol step move_count and return True

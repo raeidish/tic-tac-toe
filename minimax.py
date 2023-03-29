@@ -1,12 +1,8 @@
 from game import check_win
+from game import get_available_moves
 def minimax(state,move_count,symbol,depth,maximizing):
 
-    #construct all next_possible moves for this iteration
-    available_moves = []
-    for (i,s) in enumerate(state):
-        if s != "X" and s != "Y":
-            available_moves.append(i)
-    
+    available_moves = get_available_moves(state) 
     positive_score = 1*(len(available_moves)+1)
     negative_score = -1*(len(available_moves)+1)
 
@@ -48,4 +44,3 @@ def minimax(state,move_count,symbol,depth,maximizing):
             if eval[1] < best[1]:
                 best = (move,eval[1])
         return best
-
