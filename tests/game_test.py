@@ -1,79 +1,111 @@
 import pytest
-from game import TicTacToe
-from game import check_win
+from game import TicTacToe,Win_state
+
+class moc_player:
+    move: int = 1
+    symbol: str
+    win_state: Win_state
+
+    def __init__(self,symbol):
+        self.symbol = symbol
+    
+    def get_move(self,state,available_moves):
+        return self.move
+
+    def after_game(self,win_state):
+        self.win_state = win_state
 
 
 @pytest.fixture()
 def game():
-    return TicTacToe()
-
-def test_invalid_move(game):
-    game.state = ["X","Y","","","","","","",""]
-    assert not game.make_move(0,"X")
-
-def test_valid_move(game):
-    game.state = ["X","Y","","","","","","",""]
-    assert game.make_move(2,"X")
+    p1 = moc_player("X")
+    p2 = moc_player("O")
+    return TicTacToe(p1,p2)
 
 def test_x_win(game):
     #horizontal wins
     game.state = ["X","X","X","","","","","",""]
-    assert check_win(game.state,game.move_count)
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
     game.state = ["","","","X","X","X","","",""]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
     
     game.state = ["","","","","","","X","X","X"]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
     #vertical wins 
     game.state = ["X","","","X","","","X","",""]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
     game.state = ["","X","","","X","","","X",""]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
     game.state = ["","","X","","","X","","","X"]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
     #diagonal wins
     game.state = ["X","","","","X","","","","X"]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
     game.state = ["","","X","","X","","X","",""]
-    assert check_win(game.state,game.move_count) == 1
+    win_state = game.check_win()
+    assert win_state == Win_state.X
 
-def test_y_win(game):
+def test_moves(game):
+    game.players["X"].move = 0
+    game.players["O"].move = 1
+    game.step()
+    assert game.state == ["X","","","","","","","",""]
+    game.step()
+    assert game.state == ["X","O","","","","","","",""]
+
+def test_o_win(game):
     #horizontal wins
-    game.state = ["Y","Y","Y","","","","","",""]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["O","O","O","","","","","",""]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
-    game.state = ["","","","Y","Y","Y","","",""]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["","","","O","O","O","","",""]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
     
-    game.state = ["","","","","","","Y","Y","Y"]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["","","","","","","O","O","O"]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
     #vertical wins 
-    game.state = ["Y","","","Y","","","Y","",""]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["O","","","O","","","O","",""]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
-    game.state = ["","Y","","","Y","","","Y",""]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["","O","","","O","","","O",""]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
-    game.state = ["","","Y","","","Y","","","Y"]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["","","O","","","O","","","O"]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
     #diagonal wins
-    game.state = ["Y","","","","Y","","","","Y"]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["O","","","","O","","","","O"]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
-    game.state = ["","","Y","","Y","","Y","",""]
-    assert check_win(game.state,game.move_count) == 2
+    game.state = ["","","O","","O","","O","",""]
+    win_state = game.check_win()
+    assert win_state == Win_state.O
 
 def test_draw(game):
     game.move_count = 9
-    assert check_win(game.state,game.move_count) == 3
+    win_state = game.check_win()
+    assert win_state == Win_state.DRAW
 
 def test_no_win(game):
-    assert check_win(game.state,game.move_count) == 0
+    assert not game.check_win()

@@ -1,5 +1,4 @@
 from game import TicTacToe
-from game import check_win
 from minimax import minimax
 from agent import Agent
 import os
@@ -64,9 +63,6 @@ def main():
     d = 0
     ends = []
     while run:
-
-        #print_board(game.state)
-
         win_state = check_win(game.state,game.move_count)
         if(win_state > 0):
             ends.append(check_win_or_draw(win_state,agent))
