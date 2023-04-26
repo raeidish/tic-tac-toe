@@ -56,30 +56,32 @@ class TicTacToe:
         self.players = {player1.symbol: player1, player2.symbol: player2}
 
     def step(self):
+
         #check if win or draw
         win_state = self.check_win()
-        if win_state:
-            self.players["p1"].after_game(win_state)
-            self.players["p2"].after_game(win_state)
+        if win_state != None:
+            self.players["X"].after_game(win_state)
+            self.players["O"].after_game(win_state)
             return win_state
 
         # if x or y turn
         if self.move_count % 2 == 0:
-            player = self.players["X"]
+            symbol = "X"
         else:
-            player = self.players["O"]
+            symbol = "O"
         
         available_moves = self.get_available_moves()
-        move = player.get_move(self.state,available_moves)
-        self.state[move] = player.symbol
+        move = self.players[symbol].get_move(self.state,available_moves)
+        self.state[move] = symbol
         self.move_count += 1
-        return None
 
+        return None
             
 
     def reset_board(self):
         self.move_count = 0
-        self.state = copy.copy(self.initial_state)
+        self.state = ["" for _ in range(0,9)]
+
 
     def check_win(self):
         for mask in self.WIN_MASKS:
@@ -88,7 +90,7 @@ class TicTacToe:
             if(sum([self.state[i] == "O" if x == 1 else False for i,x in enumerate(mask)]) == 3):
                 return Win_state.O
 
-        if(self.move_count == (math.pow(3,2))):
+        if(len(self.get_available_moves()) == 0):
             return Win_state.DRAW
         return None
 
